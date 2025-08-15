@@ -4,9 +4,10 @@ import { UploadIcon } from './icons/UploadIcon';
 interface FileUploadProps {
   onFileUpload: (file: File, questionCount: number) => void;
   error: string | null;
+  previousFileName?: string;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, error }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, error, previousFileName }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [questionCount, setQuestionCount] = useState<number>(10);
 
@@ -50,19 +51,31 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, error }) => {
   }, [onFileUpload, questionCount]);
 
   const dropzoneClasses = `
-    w-full max-w-2xl bg-surface/50 border rounded-xl p-12 text-center cursor-pointer
-    transition-all duration-300 ease-in-out
-    ${isDragging ? 'border-primary shadow-glow scale-105' : 'border-gray-700 hover:border-primary hover:shadow-glow'}
+    w-full max-w-2xl bg-white border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer
+    transition-all duration-300 ease-in-out card-hover
+    ${isDragging 
+      ? 'border-primary bg-primary-light shadow-glow scale-105' 
+      : 'border-border-light hover:border-primary hover:bg-surface-hover hover:shadow-medium'
+    }
   `;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center animate-fade-in-up">
       {error && (
-        <div className="bg-red-500/20 border border-red-500 text-red-300 p-4 rounded-lg mb-6 w-full max-w-2xl">
-          <p className="font-bold">An Error Occurred</p>
-          <p>{error}</p>
+        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-2xl mb-8 w-full max-w-2xl shadow-soft">
+          <p className="font-semibold text-lg mb-2">An Error Occurred</p>
+          <p className="text-red-600">{error}</p>
         </div>
       )}
+      
+      {previousFileName && (
+        <div className="bg-blue-50 border border-blue-200 text-blue-700 p-6 rounded-2xl mb-8 w-full max-w-2xl shadow-soft">
+          <p className="font-semibold text-lg mb-2">Welcome Back!</p>
+          <p className="text-blue-600">You were working with: <span className="font-semibold">{previousFileName}</span></p>
+          <p className="text-blue-600 text-sm mt-2">Upload a new PDF or the same file to generate a new quiz.</p>
+        </div>
+      )}
+      
       <div
         className={dropzoneClasses}
         onDragEnter={handleDragEnter}
@@ -79,12 +92,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, error }) => {
           onChange={handleFileChange}
         />
         <div className="flex flex-col items-center text-on-surface">
-            <UploadIcon className="w-16 h-16 mb-4 text-gray-500" />
-            <p className="text-xl font-semibold">Drag & drop your PDF here</p>
-            <p className="text-gray-400 mt-1">or click to browse</p>
+            <div className="w-20 h-20 bg-primary-light rounded-full flex items-center justify-center mb-6">
+              <UploadIcon className="w-10 h-10 text-primary" />
+            </div>
+            <h2 className="text-2xl font-semibold text-on-surface mb-2">Drag & drop your PDF here</h2>
+            <p className="text-on-surface-light mb-8">or click to browse</p>
 
-            <div className="mt-6 w-full max-w-xs">
-              <label htmlFor="question-count" className="block text-sm font-medium text-gray-400 mb-2">
+            <div className="w-full max-w-xs mb-8">
+              <label htmlFor="question-count" className="block text-sm font-medium text-on-surface mb-3">
                 Number of Questions
               </label>
               <select
@@ -93,16 +108,20 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, error }) => {
                 value={questionCount}
                 onChange={(e) => setQuestionCount(Number(e.target.value))}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full bg-surface border border-gray-600 rounded-md py-2 px-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition"
+                className="w-full bg-white border-2 border-border-light rounded-xl py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 input-modern"
               >
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>
                 <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
               </select>
             </div>
 
-            <p className="text-sm text-gray-500 mt-6">Max file size: 50MB</p>
+            <p className="text-sm text-on-surface-light">Max file size: 50MB</p>
         </div>
       </div>
     </div>

@@ -57,6 +57,13 @@ const App: React.FC = () => {
     setAppState(AppState.UPLOAD);
   };
 
+  const handleGoBack = () => {
+    setQuiz(null);
+    setError(null);
+    setAppState(AppState.UPLOAD);
+    // Keep the fileName so user knows which file they uploaded
+  };
+
   const renderContent = () => {
     switch (appState) {
       case AppState.LOADING:
@@ -69,6 +76,7 @@ const App: React.FC = () => {
               onExportPdf={handleExportPdf}
               onExportCsv={handleExportCsv}
               onStartOver={handleStartOver}
+              onGoBack={handleGoBack}
               fileName={fileName}
             />
           );
@@ -76,17 +84,17 @@ const App: React.FC = () => {
         return null; // Should not happen
       case AppState.UPLOAD:
       default:
-        return <FileUpload onFileUpload={handleFileUpload} error={error} />;
+        return <FileUpload onFileUpload={handleFileUpload} error={error} previousFileName={fileName} />;
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
-       <header className="w-full max-w-5xl mb-8 text-center">
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight bg-gradient-to-r from-purple-400 via-violet-500 to-pink-500 bg-clip-text text-transparent pb-2">
+    <div className="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8 animate-fade-in">
+       <header className="w-full max-w-5xl mb-8 text-center animate-slide-up">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary via-primary-hover to-secondary bg-clip-text text-transparent pb-2">
                 QuizGen AI
             </h1>
-            <p className="mt-2 text-lg text-on-surface/80">
+            <p className="mt-3 text-lg text-on-surface-light font-medium">
                 Instantly create quizzes from your PDF documents.
             </p>
         </header>

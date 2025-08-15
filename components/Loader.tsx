@@ -6,14 +6,14 @@ interface LoaderProps {
 
 const Loader: React.FC<LoaderProps> = ({ message }) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center p-8 bg-surface rounded-lg shadow-xl">
-      <div className="flex space-x-2" aria-label="Loading..." role="status">
-        <div className="h-4 w-4 rounded-full bg-primary animate-pulse" style={{ animationDuration: '1.2s' }}></div>
-        <div className="h-4 w-4 rounded-full bg-primary animate-pulse" style={{ animationDuration: '1.2s', animationDelay: '0.2s' }}></div>
-        <div className="h-4 w-4 rounded-full bg-primary animate-pulse" style={{ animationDuration: '1.2s', animationDelay: '0.4s' }}></div>
+    <div className="flex flex-col items-center justify-center text-center p-12 bg-white rounded-2xl shadow-medium border border-border-light animate-fade-in-up">
+      <div className="flex space-x-3 mb-8" aria-label="Loading..." role="status">
+        <div className="h-5 w-5 rounded-full bg-primary animate-pulse-slow" style={{ animationDuration: '1.2s' }}></div>
+        <div className="h-5 w-5 rounded-full bg-primary animate-pulse-slow" style={{ animationDuration: '1.2s', animationDelay: '0.2s' }}></div>
+        <div className="h-5 w-5 rounded-full bg-primary animate-pulse-slow" style={{ animationDuration: '1.2s', animationDelay: '0.4s' }}></div>
       </div>
-      <p className="mt-6 text-xl font-semibold text-white">{message}</p>
-      <p className="mt-2 text-on-surface">This may take a moment...</p>
+      <h3 className="text-xl font-semibold text-on-surface mb-2">{message}</h3>
+      <p className="text-on-surface-light">This may take a moment...</p>
     </div>
   );
 };

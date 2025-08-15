@@ -9,6 +9,7 @@ interface QuizReviewerProps {
   onExportPdf: () => void;
   onExportCsv: () => void;
   onStartOver: () => void;
+  onGoBack: () => void;
 }
 
 const QuizReviewer: React.FC<QuizReviewerProps> = ({
@@ -17,6 +18,7 @@ const QuizReviewer: React.FC<QuizReviewerProps> = ({
   onExportPdf,
   onExportCsv,
   onStartOver,
+  onGoBack,
 }) => {
   // State to track which answers are visible using a Set of question IDs
   const [visibleAnswers, setVisibleAnswers] = useState<Set<string>>(new Set());
@@ -34,16 +36,16 @@ const QuizReviewer: React.FC<QuizReviewerProps> = ({
     });
   };
 
-  const primaryButtonClasses = "flex items-center bg-primary/90 hover:bg-primary text-white font-bold py-2 px-4 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-glow";
+  const primaryButtonClasses = "flex items-center bg-gradient-to-r from-primary to-primary-hover hover:from-primary-hover hover:to-primary text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-glow btn-hover";
 
   return (
-    <div className="w-full bg-surface rounded-lg shadow-xl p-6 sm:p-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-700 pb-4">
+    <div className="w-full bg-white rounded-2xl shadow-medium border border-border-light p-8 animate-fade-in-up">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b border-border-light pb-6">
         <div>
-          <h2 className="text-2xl font-bold text-white">Review Quiz</h2>
-          <p className="text-on-surface mt-1">Generated from: <span className="font-semibold text-primary">{fileName}</span></p>
+          <h2 className="text-3xl font-bold text-on-surface mb-2">Review Quiz</h2>
+          <p className="text-on-surface-light">Generated from: <span className="font-semibold text-primary">{fileName}</span></p>
         </div>
-        <div className="flex items-center space-x-2 mt-4 sm:mt-0">
+        <div className="flex items-center space-x-3 mt-6 sm:mt-0">
           <button onClick={onExportPdf} className={primaryButtonClasses}>
             <PdfIcon className="w-5 h-5 mr-2" /> Export PDF
           </button>
@@ -53,21 +55,21 @@ const QuizReviewer: React.FC<QuizReviewerProps> = ({
         </div>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {quiz.questions.map((q, qIndex) => (
-          <div key={q.id} className="bg-surface/50 p-6 rounded-xl border border-gray-800/50">
+          <div key={q.id} className="bg-surface-hover p-6 rounded-2xl border border-border-light card-hover">
             <div className="flex justify-between items-center mb-4">
-              <span className="text-sm font-bold text-primary bg-primary/20 px-3 py-1 rounded-full">
+              <span className="text-sm font-semibold text-primary bg-primary-light px-4 py-2 rounded-full">
                 {qIndex + 1}. {q.type === QuestionType.MCQ ? 'Multiple Choice' : 'True/False'}
               </span>
               <button
                 onClick={() => toggleAnswerVisibility(q.id)}
-                className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors duration-200"
+                className="text-sm font-medium text-primary hover:text-primary-hover transition-colors duration-200 btn-hover px-3 py-1 rounded-lg hover:bg-primary-light"
               >
                 {visibleAnswers.has(q.id) ? 'Hide Answer' : 'Show Answer'}
               </button>
             </div>
-            <div className="w-full bg-background border border-gray-700 rounded-md p-2 text-on-surface min-h-[60px] flex items-center">
+            <div className="w-full bg-white border-2 border-border-light rounded-xl p-4 text-on-surface min-h-[60px] flex items-center shadow-soft">
               {q.question}
             </div>
             <div className="mt-4 space-y-3">
@@ -75,9 +77,9 @@ const QuizReviewer: React.FC<QuizReviewerProps> = ({
                   const isAnswerVisible = visibleAnswers.has(q.id);
                   const isCorrect = q.correctAnswer === option;
                   return (
-                    <div key={oIndex} className="flex items-center pl-7">
+                    <div key={oIndex} className="flex items-center pl-6">
                       <span className={`
-                        ${isAnswerVisible && isCorrect ? 'text-primary font-bold' : 'text-on-surface'}
+                        ${isAnswerVisible && isCorrect ? 'text-primary font-semibold' : 'text-on-surface'}
                          transition-colors duration-300 text-sm
                       `}>
                          {String.fromCharCode(97 + oIndex)}) {option}
@@ -89,9 +91,9 @@ const QuizReviewer: React.FC<QuizReviewerProps> = ({
                   const isAnswerVisible = visibleAnswers.has(q.id);
                   const isCorrect = q.correctAnswer === option;
                   return (
-                    <div key={option} className="flex items-center pl-7">
+                    <div key={option} className="flex items-center pl-6">
                       <span className={`
-                        ${isAnswerVisible && isCorrect ? 'text-primary font-bold' : 'text-on-surface'}
+                        ${isAnswerVisible && isCorrect ? 'text-primary font-semibold' : 'text-on-surface'}
                          transition-colors duration-300 text-sm
                       `}>
                         {option}
@@ -104,8 +106,20 @@ const QuizReviewer: React.FC<QuizReviewerProps> = ({
         ))}
       </div>
       
-      <div className="mt-8 pt-6 border-t border-gray-700 flex justify-end">
-        <button onClick={onStartOver} className="bg-transparent border border-gray-600 hover:bg-surface text-on-surface font-bold py-2 px-4 rounded-md transition-colors duration-200">
+      <div className="mt-8 pt-6 border-t border-border-light flex justify-between items-center">
+        <button 
+          onClick={onGoBack}
+          className="flex items-center bg-white border-2 border-border-light hover:border-primary hover:bg-primary-light text-on-surface hover:text-primary font-semibold py-3 px-6 rounded-xl transition-all duration-200 btn-hover"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Go Back
+        </button>
+        <button 
+          onClick={onStartOver} 
+          className="bg-white border-2 border-border-light hover:border-border-hover hover:bg-surface-hover text-on-surface font-semibold py-3 px-6 rounded-xl transition-all duration-200 btn-hover"
+        >
             Start Over
         </button>
       </div>
